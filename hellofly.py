@@ -21,21 +21,22 @@ def json(user1=None, user2=None):
 
 
 LATLNG = re.compile(r'latlng = \{WGS84: \[(-?\d{1,2}\.\d+),(-?\d{1,2}\.\d+)\]\};')
-MARKER = re.compile(f'var marker2 = createMarker\(map,.*?,.*?,"(\d+)",.*?,"(.*?)",.*?,latlng,(blue|red)Icon\);')
+# The arguments of createMarker are map, region, page URL, height, order, name, image URL, latlng, icon
+MARKER = re.compile(f'var marker2 = createMarker\(map,.*?,"(.*?)","(\d+)",.*?,"(.*?)",.*?,latlng,(blue|red)Icon\);')
 
 
 def compare_rows(rows1, rows2):
     all = []
     for r1, r2 in zip(rows1, rows2):
-        climbed1, climbed2 = r1[3], r2[3]
+        climbed1, climbed2 = r1[4], r2[4]
         if climbed1 and climbed2:
-            all.append(r1[:3] + ["both"])
+            all.append(r1[:4] + ["both"])
         elif climbed1:
-            all.append(r1[:3] + ["only1"])
+            all.append(r1[:4] + ["only1"])
         elif climbed2:
-            all.append(r1[:3] + ["only2"])
+            all.append(r1[:4] + ["only2"])
         else:
-            all.append(r1[:3] + ["neither"])
+            all.append(r1[:4] + ["neither"])
     return all
 
 
@@ -54,8 +55,8 @@ def html_to_rows(html_path):
         else:
             m = MARKER.search(line)
             if m:
-                height, name, colour = m.group(1, 2, 3)
+                url, height, name, colour = m.group(1, 2, 3, 4)
                 climbed = (colour == "blue")
-                row = [name, loc, int(height), climbed]
+                row = [name, loc, int(height), url, climbed]
                 rows.append(row)
     return rows

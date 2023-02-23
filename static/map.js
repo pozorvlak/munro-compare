@@ -34,9 +34,11 @@ async function addMarkers() {
     let url = window.location + ".json"
     let mountains = await (await fetch(url)).json();
     mountains.forEach(row => {
-        var icon = icons[row[3]];
+        var icon = icons[row[4]];
+        var url = `https://www.walkhighlands.co.uk/munros/${row[3]}`;
+        var popup_link = `<a href="${url}" target="_blank">${row[0]}</a>`
         var marker = L.marker(row[1], {icon: icon}).addTo(map)
-        marker.bindPopup(row[0]);
+        marker.bindPopup(popup_link);
     });
 }
 addMarkers();
