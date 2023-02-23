@@ -12,9 +12,9 @@ app = Flask(__name__)
 def hello(user1=None, user2=None):
     rows1 = html_to_rows(html_path_for_user(user1))
     rows2 = html_to_rows(html_path_for_user(user2))
-    both, only1, only2, neither = compare_rows(rows1, rows2)
+    both, only1, only2, neither, all = compare_rows(rows1, rows2)
     print(len(both), len(only1), len(only2), len(neither))
-    return render_template('hello.html', user1=user1, user2=user2, both=both, only1=only1, only2=only2, neither=neither)
+    return render_template('hello.html', user1=user1, user2=user2, both=both, only1=only1, only2=only2, neither=neither, all=all)
 
 
 LATLNG = re.compile(r'latlng = \{WGS84: \[(-?\d{1,2}\.\d+),(-?\d{1,2}\.\d+)\]\};')
@@ -22,18 +22,22 @@ MARKER = re.compile(f'var marker2 = createMarker\(map,.*?,.*?,"(\d+)",.*?,"(.*?)
 
 
 def compare_rows(rows1, rows2):
-    both, only1, only2, neither = [], [], [], []
+    both, only1, only2, neither, all = [], [], [], [], []
     for r1, r2 in zip(rows1, rows2):
         climbed1, climbed2 = r1[3], r2[3]
         if climbed1 and climbed2:
             both.append(r1[:3])
+            all.append(r1[:3] + ["both"])
         elif climbed1:
             only1.append(r1[:3])
+            all.append(r1[:3] + ["only1"])
         elif climbed2:
             only2.append(r1[:3])
+            all.append(r1[:3] + ["only2"])
         else:
             neither.append(r1[:3])
-    return both, only1, only2, neither
+            all.append(r1[:3] + ["neither"])
+    return both, only1, only2, neither, all
 
 
 def html_path_for_user(user_id):
