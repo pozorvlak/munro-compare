@@ -8,10 +8,7 @@
          <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
              integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
              crossorigin=""></script>
-             <script>
-                 const mountains = {{ all }};
-            </script>
-        <script src="{{url_for('static', filename='map.js')}}" defer></script>
+        <script src="{{url_for('static', filename='map.js')}}" defer async></script>
     </head>
     <body>
         <h1>Munro comparison</h1>
@@ -19,37 +16,5 @@
         <h2>Comparing {{user1}} and {{user2}}</h2>
         {% endif %}
         <div id="map" style="height: 1000px"></div>
-        {% if both %}
-        <h3>Climbed by both</h3>
-        <ul>
-            {% for row in both %}
-            <li>{{ row[0] }} ({{row[2]}}m)</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% if user1 %}
-        <h3>Climbed by {{user1}} only</h3>
-        <ul>
-            {% for row in only1 %}
-            <li>{{ row[0] }} ({{row[2]}}m)</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% if user2 %}
-        <h3>Climbed by {{user2}} only</h3>
-        <ul>
-            {% for row in only2 %}
-            <li>{{ row[0] }} ({{row[2]}}m)</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% if neither %}
-        <h3>Climbed by neither</h3>
-        <ul>
-            {% for row in neither %}
-            <li>{{ row[0] }} ({{row[2]}}m)</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
     </body>
 </html>
